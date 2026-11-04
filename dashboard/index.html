@@ -1,0 +1,399 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Funnel HQ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  color-scheme: light;
+  --page: #f5f5f7;
+  --card: #ffffff;
+  --ink: #0b0b0b;
+  --ink-2: #52514e;
+  --muted: #898781;
+  --hair: #e6e5e0;
+  --grid: #ecebe6;
+  --base: #c3c2b7;
+  --wash: rgba(11,11,11,0.035);
+  --ring: rgba(11,11,11,0.08);
+  --s1: #2a78d6;   /* visitors */
+  --s2: #eb6834;   /* leads */
+  --s3: #1baf7a;   /* booked */
+  --r1: #0d366b; --r2: #184f95; --r3: #256abf; --r4: #3987e5; --r5: #6da7ec; --r6: #86b6ef; /* ordinal funnel ramp */
+  --good: #006300;
+  --bad: #c23434;
+  --brand-a: #001DFB;
+  --brand-b: #0AEBFF;
+  --shadow: 0 1px 2px rgba(11,11,11,0.04), 0 8px 24px -12px rgba(11,11,11,0.10);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --page: #0d0d0d; --card: #1a1a19; --ink: #f0efec; --ink-2: #c3c2b7; --muted: #898781;
+    --hair: #2c2c2a; --grid: #262624; --base: #383835; --wash: rgba(255,255,255,0.04); --ring: rgba(255,255,255,0.10);
+    --s1: #3987e5; --s2: #d95926; --s3: #199e70;
+    --r1: #9ec5f4; --r2: #6da7ec; --r3: #3987e5; --r4: #256abf; --r5: #1c5cab; --r6: #184f95;
+    --good: #0ca30c; --bad: #e66767;
+    --shadow: 0 1px 2px rgba(0,0,0,0.4);
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --page: #0d0d0d; --card: #1a1a19; --ink: #f0efec; --ink-2: #c3c2b7; --muted: #898781;
+  --hair: #2c2c2a; --grid: #262624; --base: #383835; --wash: rgba(255,255,255,0.04); --ring: rgba(255,255,255,0.10);
+  --s1: #3987e5; --s2: #d95926; --s3: #199e70;
+  --r1: #9ec5f4; --r2: #6da7ec; --r3: #3987e5; --r4: #256abf; --r5: #1c5cab; --r6: #184f95;
+  --good: #0ca30c; --bad: #e66767;
+  --shadow: 0 1px 2px rgba(0,0,0,0.4);
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body {
+  background: var(--page); color: var(--ink);
+  font: 400 14px/1.45 Inter, system-ui, -apple-system, "Segoe UI", sans-serif;
+  -webkit-font-smoothing: antialiased; letter-spacing: -0.006em;
+}
+button, select, input { font: inherit; color: inherit; }
+a { color: inherit; }
+.num { font-variant-numeric: tabular-nums; }
+.wrap { max-width: 1280px; margin: 0 auto; padding: 0 24px; }
+@media (max-width: 640px) { .wrap { padding: 0 16px; } }
+
+/* ---------- Top bar ---------- */
+.brandline { height: 3px; background: linear-gradient(90deg, var(--brand-a), #0181FC 55%, var(--brand-b)); }
+.top { position: sticky; top: 0; z-index: 20; background: color-mix(in srgb, var(--page) 82%, transparent);
+  backdrop-filter: saturate(180%) blur(18px); -webkit-backdrop-filter: saturate(180%) blur(18px); border-bottom: 1px solid var(--hair); }
+.top .wrap { display: flex; align-items: center; gap: 16px; height: 60px; }
+.logo { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 16px; letter-spacing: -0.02em; white-space: nowrap; }
+.logo i { width: 22px; height: 22px; border-radius: 7px; background: linear-gradient(135deg, var(--brand-a), var(--brand-b)); display: block; }
+.status { margin-left: auto; display: flex; align-items: center; gap: 8px; color: var(--muted); font-size: 12.5px; white-space: nowrap; }
+.dot { width: 8px; height: 8px; border-radius: 50%; background: var(--s3); box-shadow: 0 0 0 0 color-mix(in srgb, var(--s3) 50%, transparent); animation: pulse 2.4s infinite; }
+.dot.off { background: var(--muted); animation: none; }
+@keyframes pulse { 0% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--s3) 45%, transparent); } 70% { box-shadow: 0 0 0 8px transparent; } 100% { box-shadow: 0 0 0 0 transparent; } }
+@media (prefers-reduced-motion: reduce) { .dot { animation: none; } }
+.iconbtn { width: 34px; height: 34px; border-radius: 10px; border: 1px solid var(--hair); background: var(--card); display: grid; place-items: center; cursor: pointer; }
+.iconbtn:hover { background: var(--wash); }
+.iconbtn svg { width: 16px; height: 16px; stroke: var(--ink-2); fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.spin svg { animation: spin .8s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ---------- Filters ---------- */
+.filters { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; padding: 28px 0 8px; }
+.title h1 { margin: 0; font-size: 32px; line-height: 1.1; font-weight: 700; letter-spacing: -0.03em; }
+.title p { margin: 6px 0 0; color: var(--ink-2); font-size: 15px; }
+.filterrow { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; padding: 18px 0 22px; }
+.select { position: relative; }
+.select select { appearance: none; -webkit-appearance: none; height: 38px; padding: 0 36px 0 14px; border-radius: 11px; border: 1px solid var(--hair);
+  background: var(--card); font-weight: 600; cursor: pointer; min-width: 220px; max-width: 100%; }
+.select::after { content: ""; position: absolute; right: 14px; top: 15px; width: 7px; height: 7px; border-right: 1.8px solid var(--ink-2); border-bottom: 1.8px solid var(--ink-2); transform: rotate(45deg); pointer-events: none; }
+.seg { display: inline-flex; padding: 3px; border-radius: 11px; background: var(--wash); border: 1px solid var(--hair); }
+.seg button { border: 0; background: transparent; height: 30px; padding: 0 13px; border-radius: 8px; font-weight: 600; font-size: 13px; color: var(--ink-2); cursor: pointer; }
+.seg button[aria-pressed="true"] { background: var(--card); color: var(--ink); box-shadow: 0 1px 2px rgba(0,0,0,.08), 0 0 0 1px var(--ring); }
+
+/* ---------- Cards & grid ---------- */
+.grid { display: grid; gap: 16px; grid-template-columns: repeat(12, minmax(0, 1fr)); }
+.card { background: var(--card); border-radius: 18px; box-shadow: var(--shadow); border: 1px solid var(--ring); padding: 22px; min-width: 0; }
+.c12 { grid-column: span 12; } .c8 { grid-column: span 8; } .c7 { grid-column: span 7; } .c6 { grid-column: span 6; } .c5 { grid-column: span 5; } .c4 { grid-column: span 4; }
+@media (max-width: 1020px) { .c8, .c7, .c6, .c5, .c4 { grid-column: span 12; } }
+.card h2 { margin: 0; font-size: 15px; font-weight: 600; letter-spacing: -0.01em; }
+.card .sub { margin: 3px 0 0; color: var(--muted); font-size: 12.5px; }
+.cardhead { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; margin-bottom: 18px; }
+.section-gap { height: 16px; }
+.loading .card > *:not(.cardhead) { opacity: .45; transition: opacity .2s; }
+
+/* ---------- Hero + stat tiles ---------- */
+.hero { display: grid; grid-template-columns: 1.25fr 2fr; gap: 16px; }
+@media (max-width: 1020px) { .hero { grid-template-columns: 1fr; } }
+.herocard { position: relative; overflow: hidden; }
+.herocard::before { content: ""; position: absolute; inset: auto -30% -60% auto; width: 340px; height: 340px; border-radius: 50%;
+  background: radial-gradient(closest-side, color-mix(in srgb, #0181FC 16%, transparent), transparent); pointer-events: none; }
+.label { color: var(--ink-2); font-size: 13px; font-weight: 500; }
+.herofig { font-size: 64px; line-height: 1; font-weight: 700; letter-spacing: -0.045em; margin: 14px 0 10px; }
+.heromini { display: flex; gap: 22px; flex-wrap: wrap; margin-top: 18px; padding-top: 16px; border-top: 1px solid var(--hair); }
+.heromini div b { display: block; font-size: 20px; font-weight: 650; letter-spacing: -0.02em; }
+.heromini div span { color: var(--muted); font-size: 12.5px; }
+.tiles { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 16px; }
+@media (max-width: 640px) { .tiles { grid-template-columns: repeat(2, minmax(0,1fr)); } }
+.tile .v { font-size: 30px; font-weight: 650; letter-spacing: -0.035em; margin: 10px 0 6px; line-height: 1.05; }
+.delta { display: inline-flex; align-items: center; gap: 4px; font-size: 12.5px; font-weight: 600; }
+.delta.up { color: var(--good); } .delta.down { color: var(--bad); } .delta.flat { color: var(--muted); font-weight: 500; }
+.tile .hint { color: var(--muted); font-size: 12px; margin-top: 2px; }
+
+/* ---------- Funnel ---------- */
+.funnel { display: grid; gap: 6px; }
+.stage { display: grid; grid-template-columns: 170px 1fr 92px; gap: 14px; align-items: center; min-height: 40px; }
+.stage .name { font-weight: 550; font-size: 13.5px; }
+.stage .name small { display: block; color: var(--muted); font-weight: 400; font-size: 12px; }
+.stage .track { position: relative; height: 24px; }
+.stage .bar { position: absolute; left: 0; top: 0; bottom: 0; border-radius: 0 4px 4px 0; min-width: 3px; transition: width .6s cubic-bezier(.2,.8,.2,1); }
+.stage .val { text-align: right; font-weight: 650; }
+.stage .val small { display: block; color: var(--muted); font-weight: 500; font-size: 12px; }
+.drop { grid-column: 2 / 3; font-size: 12px; color: var(--muted); padding-left: 2px; display: flex; gap: 6px; align-items: center; }
+.drop.worst { color: var(--bad); font-weight: 600; }
+@media (max-width: 640px) { .stage { grid-template-columns: 112px 1fr 64px; gap: 10px; } .drop { grid-column: 1 / -1; } }
+
+/* ---------- Charts ---------- */
+.chart { position: relative; width: 100%; }
+.chart svg { display: block; width: 100%; height: auto; overflow: visible; }
+.chart .gridline { stroke: var(--grid); stroke-width: 1; }
+.chart .baseline { stroke: var(--base); stroke-width: 1; }
+.chart .tick { fill: var(--muted); font-size: 11px; font-variant-numeric: tabular-nums; }
+.chart .line { fill: none; stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; }
+.chart .cross { stroke: var(--base); stroke-width: 1; }
+.tip { position: absolute; pointer-events: none; z-index: 5; background: var(--card); border: 1px solid var(--ring); box-shadow: 0 8px 24px -8px rgba(0,0,0,.25);
+  border-radius: 10px; padding: 8px 10px; font-size: 12px; min-width: 130px; opacity: 0; transition: opacity .12s; }
+.tip.on { opacity: 1; }
+.tip .t { color: var(--muted); margin-bottom: 4px; }
+.tip .r { display: flex; align-items: center; gap: 8px; justify-content: space-between; }
+.tip .r b { font-weight: 650; font-variant-numeric: tabular-nums; }
+.tip .k { display: inline-flex; align-items: center; gap: 6px; color: var(--ink-2); }
+.tip .k i { width: 12px; height: 2px; border-radius: 1px; display: block; }
+.legend { display: flex; gap: 14px; flex-wrap: wrap; font-size: 12.5px; color: var(--ink-2); }
+.legend span { display: inline-flex; align-items: center; gap: 6px; }
+.legend i { width: 14px; height: 2px; border-radius: 1px; display: block; }
+.legend i.box { width: 10px; height: 10px; border-radius: 3px; }
+
+/* ---------- VSL ---------- */
+.vsltabs { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 14px; }
+.vsltabs button { border: 1px solid var(--hair); background: var(--card); border-radius: 999px; padding: 5px 12px; font-size: 12.5px; font-weight: 600; cursor: pointer; color: var(--ink-2); max-width: 260px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.vsltabs button[aria-pressed="true"] { background: var(--ink); color: var(--card); border-color: var(--ink); }
+.vslstats { display: grid; grid-template-columns: repeat(5, minmax(0,1fr)); gap: 12px; margin-top: 18px; }
+@media (max-width: 640px) { .vslstats { grid-template-columns: repeat(2, minmax(0,1fr)); } }
+.vslstats div { background: var(--wash); border-radius: 12px; padding: 12px; }
+.vslstats b { display: block; font-size: 20px; font-weight: 650; letter-spacing: -0.02em; }
+.vslstats span { color: var(--muted); font-size: 12px; }
+.insight { margin-top: 14px; padding: 12px 14px; border-radius: 12px; background: color-mix(in srgb, var(--s1) 8%, transparent); color: var(--ink); font-size: 13.5px; display: flex; gap: 10px; align-items: flex-start; }
+.insight svg { flex: none; width: 16px; height: 16px; margin-top: 2px; stroke: var(--s1); fill: none; stroke-width: 2; stroke-linecap: round; }
+
+/* ---------- Tables ---------- */
+.tablewrap { overflow-x: auto; margin: 0 -22px; padding: 0 22px; }
+table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+th { text-align: left; font-weight: 500; color: var(--muted); font-size: 12px; padding: 0 10px 10px; border-bottom: 1px solid var(--hair); white-space: nowrap; }
+td { padding: 11px 10px; border-bottom: 1px solid var(--hair); vertical-align: middle; white-space: nowrap; }
+tr:last-child td { border-bottom: 0; }
+th:first-child, td:first-child { padding-left: 0; } th:last-child, td:last-child { padding-right: 0; }
+td.r, th.r { text-align: right; font-variant-numeric: tabular-nums; }
+tbody tr.click { cursor: pointer; } tbody tr.click:hover td { background: var(--wash); }
+tbody tr.sel td { background: color-mix(in srgb, var(--s1) 7%, transparent); }
+.pill { display: inline-flex; align-items: center; gap: 5px; padding: 2px 8px; border-radius: 999px; font-size: 11.5px; font-weight: 600; background: var(--wash); color: var(--ink-2); }
+.pill.lead { background: color-mix(in srgb, var(--s2) 14%, transparent); color: var(--ink); }
+.pill.booked { background: color-mix(in srgb, var(--s3) 16%, transparent); color: var(--ink); }
+.pill i { width: 6px; height: 6px; border-radius: 50%; display: block; }
+.inbar { display: flex; align-items: center; gap: 10px; justify-content: flex-end; }
+.inbar .mtrack { width: 72px; height: 6px; border-radius: 3px; background: var(--wash); overflow: hidden; }
+.inbar .mfill { height: 100%; border-radius: 3px; background: var(--s1); }
+.cname { font-weight: 600; } .cname small { display: block; font-weight: 400; color: var(--muted); font-size: 12px; }
+
+/* ---------- Section map ---------- */
+.smap { display: grid; gap: 4px; }
+.srow { display: grid; grid-template-columns: 28px minmax(0, 1.2fr) minmax(0, 1fr) 64px 58px; gap: 12px; align-items: center; padding: 6px 0; }
+.srow .i { color: var(--muted); font-size: 12px; text-align: right; font-variant-numeric: tabular-nums; }
+.srow .n { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 500; }
+.srow .t { height: 18px; position: relative; }
+.srow .t .b { position: absolute; left: 0; top: 0; bottom: 0; border-radius: 0 4px 4px 0; background: var(--s1); min-width: 2px; }
+.srow .p { text-align: right; font-weight: 650; font-variant-numeric: tabular-nums; }
+.srow .s { text-align: right; color: var(--ink-2); font-variant-numeric: tabular-nums; font-size: 12.5px; }
+.shead { color: var(--muted); font-size: 12px; padding-bottom: 6px; border-bottom: 1px solid var(--hair); margin-bottom: 4px; }
+@media (max-width: 640px) { .srow { grid-template-columns: 22px minmax(0,1fr) 54px 48px; } .srow .t { display: none; } }
+
+/* ---------- Device split ---------- */
+.split { display: flex; height: 24px; gap: 2px; margin: 4px 0 14px; }
+.split div { border-radius: 4px; min-width: 3px; }
+
+/* ---------- Feed ---------- */
+.feed { display: grid; }
+.frow .vslm span { white-space: nowrap; }
+.frow { display: grid; grid-template-columns: 92px minmax(0, 1.3fr) minmax(0, 1.4fr) 168px auto; gap: 14px; align-items: center; padding: 13px 0; border-bottom: 1px solid var(--hair); }
+.frow:last-child { border-bottom: 0; }
+.frow .when { color: var(--muted); font-size: 12.5px; font-variant-numeric: tabular-nums; }
+.frow .who b { font-weight: 600; display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.frow .who span { color: var(--muted); font-size: 12px; }
+.frow .path { display: flex; flex-wrap: wrap; gap: 4px; }
+.frow .path span { font-size: 12px; padding: 2px 7px; border-radius: 6px; background: var(--wash); color: var(--ink-2); }
+.frow .flags { display: flex; gap: 6px; justify-content: flex-end; align-items: center; flex-wrap: wrap; }
+.watch { display: inline-flex; align-items: center; gap: 6px; height: 30px; padding: 0 12px; border-radius: 9px; border: 1px solid var(--hair); text-decoration: none; font-weight: 600; font-size: 12.5px; white-space: nowrap; }
+.watch:hover { background: var(--wash); }
+.watch svg { width: 11px; height: 11px; fill: currentColor; }
+@media (max-width: 860px) { .frow { grid-template-columns: 1fr auto; } .frow .path, .frow .vslm { grid-column: 1 / -1; } .frow .when { order: -1; grid-column: 1 / -1; } }
+
+.empty { color: var(--muted); font-size: 13.5px; padding: 26px 0; text-align: center; }
+.banner { margin: 18px 0 0; padding: 12px 16px; border-radius: 12px; background: color-mix(in srgb, #eda100 16%, transparent); border: 1px solid color-mix(in srgb, #eda100 40%, transparent); font-size: 13.5px; display: flex; gap: 12px; align-items: center; justify-content: space-between; flex-wrap: wrap; }
+.banner button { border: 0; background: var(--ink); color: var(--card); border-radius: 8px; padding: 6px 12px; font-weight: 600; font-size: 12.5px; cursor: pointer; }
+.err { margin: 18px 0 0; padding: 12px 16px; border-radius: 12px; background: color-mix(in srgb, var(--bad) 10%, transparent); font-size: 13.5px; }
+footer { color: var(--muted); font-size: 12px; padding: 36px 0 48px; text-align: center; }
+
+/* ---------- Setup ---------- */
+.setup { min-height: 100vh; display: grid; place-items: center; padding: 32px 16px; }
+.setup .box { width: 100%; max-width: 520px; }
+.setup h1 { font-size: 34px; letter-spacing: -0.035em; line-height: 1.08; margin: 18px 0 10px; }
+.setup h1 em { white-space: nowrap; font-style: normal; background: linear-gradient(90deg, var(--brand-a), #0181FC 50%, var(--brand-b)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.setup p.lead { color: var(--ink-2); font-size: 15.5px; margin: 0 0 24px; }
+.setup ol { margin: 0 0 22px; padding: 0; list-style: none; counter-reset: s; display: grid; gap: 12px; }
+.setup li { counter-increment: s; display: grid; grid-template-columns: 26px 1fr; gap: 12px; font-size: 14px; color: var(--ink-2); }
+.setup li::before { content: counter(s); width: 26px; height: 26px; border-radius: 8px; background: var(--wash); border: 1px solid var(--hair); display: grid; place-items: center; font-weight: 600; font-size: 12.5px; color: var(--ink); }
+.setup li b { color: var(--ink); font-weight: 600; }
+.setup code { font-size: 12.5px; background: var(--wash); padding: 1px 6px; border-radius: 5px; }
+.setup form { display: flex; gap: 8px; }
+.setup input { flex: 1; min-width: 0; height: 46px; border-radius: 12px; border: 1px solid var(--hair); background: var(--card); padding: 0 14px; }
+.setup input:focus { outline: 2px solid color-mix(in srgb, #0181FC 50%, transparent); outline-offset: 1px; }
+.primary { height: 46px; padding: 0 18px; border-radius: 12px; border: 0; background: var(--ink); color: var(--card); font-weight: 600; cursor: pointer; white-space: nowrap; }
+.ghost { margin-top: 14px; background: none; border: 0; color: var(--ink-2); text-decoration: underline; text-underline-offset: 3px; cursor: pointer; font-size: 13.5px; padding: 0; }
+.setup .note { color: var(--muted); font-size: 12.5px; margin-top: 14px; }
+.setup .msg { color: var(--bad); font-size: 13px; margin-top: 10px; min-height: 18px; }
+[hidden] { display: none !important; }
+</style>
+</head>
+<body>
+
+<section class="setup" id="setup" hidden>
+  <div class="box">
+    <div class="logo"><i></i>Funnel HQ</div>
+    <h1>Every funnel, every visitor, <em>one screen.</em></h1>
+    <p class="lead">Connect it to PostHog once. The key stays in this browser only.</p>
+    <ol>
+      <li><span>Open <a href="https://us.posthog.com/settings/user-api-keys" target="_blank" rel="noopener"><b>PostHog → Personal API keys</b></a> and click <b>Create personal API key</b>.</span></li>
+      <li><span>Name it <code>Funnel HQ</code>. Under scopes pick <b>Query → Read</b> only, and limit it to the <b>Brandridge Funnels</b> project.</span></li>
+      <li><span>Copy the key (starts with <code>phx_</code>) and paste it below.</span></li>
+    </ol>
+    <form id="keyform" autocomplete="off">
+      <input id="keyinput" type="password" placeholder="phx_…" spellcheck="false" aria-label="PostHog personal API key">
+      <button class="primary" type="submit">Connect</button>
+    </form>
+    <div class="msg" id="keymsg" role="alert"></div>
+    <button class="ghost" id="trysample" type="button">Preview with sample data first</button>
+    <p class="note">Read-only. Nothing on this page can change your funnels or PostHog.</p>
+  </div>
+</section>
+
+<div id="app" hidden>
+  <div class="brandline"></div>
+  <header class="top">
+    <div class="wrap">
+      <div class="logo"><i></i>Funnel HQ</div>
+      <div class="status"><span class="dot" id="livedot"></span><span id="updated">Loading…</span></div>
+      <button class="iconbtn" id="refresh" title="Refresh now" aria-label="Refresh now"><svg viewBox="0 0 24 24"><path d="M20 11a8 8 0 1 0-2.3 5.7"/><path d="M20 4v7h-7"/></svg></button>
+      <button class="iconbtn" id="settings" title="Disconnect / change key" aria-label="Settings"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg></button>
+    </div>
+  </header>
+
+  <main class="wrap" id="main">
+    <div id="banner"></div>
+    <div class="filters">
+      <div class="title"><h1 id="pagetitle">All funnels</h1><p id="pagesub">Every client, live traffic only.</p></div>
+    </div>
+    <div class="filterrow">
+      <div class="select"><select id="client" aria-label="Client"><option value="">All clients</option></select></div>
+      <div class="seg" id="range" role="group" aria-label="Date range">
+        <button data-days="1" aria-pressed="false">Today</button>
+        <button data-days="7" aria-pressed="false">7 days</button>
+        <button data-days="30" aria-pressed="true">30 days</button>
+        <button data-days="90" aria-pressed="false">90 days</button>
+      </div>
+    </div>
+
+    <div id="content">
+      <div class="hero">
+        <div class="card herocard">
+          <div class="label">Leads</div>
+          <div class="herofig" id="h-leads">—</div>
+          <div id="h-delta"></div>
+          <div class="heromini">
+            <div><b id="h-rate">—</b><span>of visitors became leads</span></div>
+            <div><b id="h-booked">—</b><span>booked a call</span></div>
+            <div><b id="h-bookrate">—</b><span>of leads booked</span></div>
+          </div>
+        </div>
+        <div class="tiles" id="tiles"></div>
+      </div>
+
+      <div class="section-gap"></div>
+      <div class="grid" id="clientsrow">
+        <div class="card c12">
+          <div class="cardhead"><div><h2>Clients</h2><p class="sub">Click a row to open that funnel.</p></div></div>
+          <div class="tablewrap"><table id="clients"></table></div>
+        </div>
+      </div>
+
+      <div class="section-gap" id="clientsgap"></div>
+      <div class="grid">
+        <div class="card c7">
+          <div class="cardhead"><div><h2>The funnel</h2><p class="sub">People who reached each stage. The red line is where you lose the most.</p></div></div>
+          <div class="funnel" id="funnel"></div>
+        </div>
+        <div class="card c5">
+          <div class="cardhead"><div><h2>Visitors per day</h2><p class="sub">Unique people landing on any page.</p></div></div>
+          <div class="chart" id="ch-visitors"></div>
+          <div class="section-gap"></div>
+          <div class="cardhead" style="margin-bottom:10px"><div><h2>Leads and bookings per day</h2></div>
+            <div class="legend"><span><i style="background:var(--s2)"></i>Leads</span><span><i style="background:var(--s3)"></i>Booked</span></div></div>
+          <div class="chart" id="ch-leads"></div>
+        </div>
+      </div>
+
+      <div class="section-gap"></div>
+      <div class="grid">
+        <div class="card c12">
+          <div class="cardhead"><div><h2>VSL watch-through</h2><p class="sub">Of everyone who pressed play, the share still watching at each point of the video.</p></div></div>
+          <div class="vsltabs" id="vsltabs"></div>
+          <div class="chart" id="ch-vsl"></div>
+          <div class="vslstats" id="vslstats"></div>
+          <div id="vslinsight"></div>
+        </div>
+      </div>
+
+      <div class="section-gap"></div>
+      <div class="grid">
+        <div class="card c12">
+          <div class="cardhead"><div><h2>Pages</h2><p class="sub">Each step of the funnel. Click a page to see how far down people get.</p></div></div>
+          <div class="tablewrap"><table id="steps"></table></div>
+        </div>
+      </div>
+
+      <div class="section-gap"></div>
+      <div class="grid">
+        <div class="card c7">
+          <div class="cardhead"><div><h2 id="maptitle">What people actually see</h2><p class="sub" id="mapsub">Sections in page order: share of visitors who reached each one, and average seconds spent on it.</p></div></div>
+          <div id="sectionmap"></div>
+        </div>
+        <div class="card c5">
+          <div class="cardhead"><div><h2>Buttons people click</h2><p class="sub">Every CTA, with where it sits on the page.</p></div></div>
+          <div class="tablewrap"><table id="ctas"></table></div>
+        </div>
+      </div>
+
+      <div class="section-gap"></div>
+      <div class="grid">
+        <div class="card c7">
+          <div class="cardhead"><div><h2>Where visitors come from</h2><p class="sub">First source of each person, and how many of them became leads.</p></div></div>
+          <div class="tablewrap"><table id="sources"></table></div>
+        </div>
+        <div class="card c5">
+          <div class="cardhead"><div><h2>Phone vs desktop</h2><p class="sub">Check the page on the device most people use.</p></div></div>
+          <div id="devices"></div>
+        </div>
+      </div>
+
+      <div class="section-gap"></div>
+      <div class="grid">
+        <div class="card c12">
+          <div class="cardhead"><div><h2>Latest visitors</h2><p class="sub">Each visit, what they did, and a link to watch the recording.</p></div></div>
+          <div class="feed" id="feed"></div>
+        </div>
+      </div>
+    </div>
+    <footer>Funnel HQ · data from PostHog project “Brandridge Funnels” · refreshes every minute</footer>
+  </main>
+</div>
+
+<div class="tip" id="tip" role="tooltip"></div>
+<script src="queries.js"></script>
+<script src="sample.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
