@@ -2,7 +2,8 @@
  * Brandridge funnel tracker — one file for every client funnel.
  * Install (page or GHL funnel "Head tracking code"):
  *   <script async src="https://javmartz04-ship-it.github.io/brandridge-tracker/t.js" data-client="mark-medicare"></script>
- * Optional attributes: data-step="registration" (default: URL path), data-identify="off" (don't tie form emails to the visitor).
+ * Optional attributes: data-name="Mark Szymanski" (display name), data-funnel="Medicare call funnel" (which funnel),
+ *   data-step="registration" (default: URL path), data-identify="off" (don't tie form emails to the visitor).
  * Debug: add ?bt_debug=1 to any page URL to log every event in the console.
  *
  * Sends to PostHog project "Brandridge Funnels" (710063). On top of PostHog's own pageviews, autocapture,
@@ -34,8 +35,15 @@
   var isPreview = /github\.io$|localhost|127\.0\.0\.1|\.test$|claudeusercontent|claude\.ai/.test(host);
   var client = attr('data-client') || DOMAINS[host] ||
     (host.endsWith('github.io') ? (path.split('/')[1] || host) : host);
+  // Set by the Funnel HQ "Add a Funnel" generator so new clients and funnels show up by name with no code edits.
+  var clientName = attr('data-name') || '';
+  var funnel = attr('data-funnel') || '';
   var step = attr('data-step') || (path === '/' ? 'home' : path.split('/').pop().replace(/\.html$/, '') || 'home');
   var debug = /[?&]bt_debug=1/.test(location.search);
+
+  var props0 = { client: client, funnel_step: step, env: isPreview ? 'preview' : 'live' };
+  if (clientName) props0.client_name = clientName;
+  if (funnel) props0.funnel = funnel;
 
   // ---------- PostHog loader (official snippet) ----------
   !function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.crossOrigin="anonymous",p.async=!0,p.src=s.api_host.replace(".i.posthog.com","-assets.i.posthog.com")+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="init capture register register_once register_for_session unregister unregister_for_session getFeatureFlag getFeatureFlagPayload isFeatureEnabled reloadFeatureFlags updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures on onFeatureFlags onSessionId getSurveys getActiveMatchingSurveys renderSurvey canRenderSurvey getNextSurveyStep identify setPersonProperties group resetGroups setPersonPropertiesForFlags resetPersonPropertiesForFlags setGroupPropertiesForFlags resetGroupPropertiesForFlags reset get_distinct_id getGroups get_session_id get_session_replay_url alias set_config startSessionRecording stopSessionRecording sessionRecordingStarted captureException loadToolbar get_property getSessionProperty createPersonProfile opt_in_capturing opt_out_capturing has_opted_in_capturing has_opted_out_capturing clear_opt_in_out_capturing debug getPageViewId".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
@@ -56,9 +64,9 @@
     capture_exceptions: true,
     session_recording: { maskAllInputs: true, maskTextSelector: '[data-bt-mask]' },
     debug: debug,
-    loaded: function (p) { p.register({ client: client, funnel_step: step, env: isPreview ? 'preview' : 'live' }); }
+    loaded: function (p) { p.register(props0); }
   }, NAME);
-  P().register({ client: client, funnel_step: step, env: isPreview ? 'preview' : 'live' });
+  P().register(props0);
 
   function send(name, props, beacon) {
     if (debug) console.log('[brandridge]', name, props || {});
